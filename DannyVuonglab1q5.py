@@ -23,5 +23,3 @@ def soupny():
 		except AttributeError:
 			break
 		article += 1		#increment counter by 1 for every loop
-
-soupny()
