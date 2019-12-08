@@ -97,5 +97,7 @@ async def on_message(message):
 	elif message.content == ("!soup spill"):
 		await message.channel.send("**Emergency shutdown**")
 		await client.close()
+	elif message.content == ("!soup help"):
+		await message.author.send("Hello world!")
 
 client.run(token)
