@@ -19,7 +19,7 @@ def soupny():
 
 	for title in soup.find_all('article'):		#print out all the strings starting with the h2 tag
 		try:
-			print(article, title.find('p').text)	#print the article count number followed by the name of the headline
+			print(article, title.find('h2').text)	#print the article count number followed by the name of the headline
 		except AttributeError:
 			break
 		article += 1		#increment counter by 1 for every loop
