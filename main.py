@@ -5,9 +5,10 @@ import discord
 from dotenv import load_dotenv
 import DannyVuonglab1q5
 import re				#import the regular expressions library
-import math				#import math methods
+#import math				#import math methods
 from bs4 import BeautifulSoup	#import string parser
 import requests			#import string parser
+import asyncio
 
 #parserny = DannyVuonglab1q5.soupny()
 
@@ -36,7 +37,7 @@ async def on_message(message):
 		return
 	elif message.content == "!soup news":	
 		#await message.channel.send(parserny)
-
+        await message.channel.send("=== Test Articles ===")
 		article = 1		#start counter at 1
 		url = 'https://www.nytimes.com/'
 		#https://www.nytimes.com/2019/09/23/us/politics/trump-un-biden-ukraine.html?action=click&module=Top%20Stories&pgtype=Homepage
@@ -46,18 +47,17 @@ async def on_message(message):
 		r_html = r.text		#convert html into text
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
-
+        
 		for title in soup.find_all('article'):		#print out all the strings starting with the h2 tag
 			try:
 				print(await message.channel.send(title.find('p').text))	#print the article count number followed by the name of the headline
 			except AttributeError:
 				break
 			article += 1		#increment counter by 1 for every loop
+            await asyncio.sleep(2)
 
 	elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
-	elif message.content == ("ya"):
-		await message.channel.send("yeet!")
 	elif message.content == ("ayy"):
 		await message.channel.send("lmao")
 	elif message.content == ("lmao"):
