@@ -39,7 +39,7 @@ async def on_message(message):
 		#await message.channel.send(parserny)
         await message.channel.send("=== Test Articles ===")
 		article = 1		#start counter at 1
-		url = 'https://www.bloomberg.com/news/'
+		url = 'https://www.nytimes.com/'
 		#https://www.nytimes.com/
 		#https://www.bloomberg.com/
 
@@ -54,7 +54,7 @@ async def on_message(message):
 			except AttributeError:
 				break
 			article += 1		#increment counter by 1 for every loop
-            await asyncio.sleep(2)
+            await asyncio.sleep(1)
 
 	elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
@@ -66,6 +66,7 @@ async def on_message(message):
 		#await message.client.user.send("Hello world")
 	elif message.content == ("!soup eat"):
 		await message.channel.send("Bye bye!")
+		await asyncio.sleep(3)
 		await client.close()
 
 client.run(token)
