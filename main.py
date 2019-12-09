@@ -110,5 +110,11 @@ async def on_message(message):
 		"!soup spill			  - Emergency shutdown (immediate shutdown)\n"
 		"```"
 		)
+	# elif message.content == ("!soup newsapi"):
+		# url = ('https://newsapi.org/v2/top-headlines?'
+       # 'country=us&'
+       # 'apiKey=7f2826a87e5a4061af386613e358c664')
+		# response = requests.get(url)
+		# print(response.json())
 
 client.run(token)
