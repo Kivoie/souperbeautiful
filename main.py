@@ -19,7 +19,7 @@ guild = os.getenv('SOUPER_DISCORD_GUILD')	#Load the guild name from the .env fil
 client = discord.Client()
 
 @client.event
-async def on_ready():
+async def on_ready():	#The following scripts in on_ready() will only run everytime the bot comes online
 	for guild in client.guilds:
 			if guild.name == guild:
 				break
@@ -30,6 +30,8 @@ async def on_ready():
 	#print(GUILD)
 	members = '\n - '.join([member.name for member in guild.members])
 	print(f'Guild Members:\n - {members}')
+	
+	await client.change_presence(activity=discord.Game(name='instead of working'))
 
 @client.event
 async def on_message(message):
@@ -95,9 +97,18 @@ async def on_message(message):
 		await asyncio.sleep(3)
 		await client.close()
 	elif message.content == ("!soup spill"):
-		await message.channel.send("**Emergency shutdown**")
+		await message.channel.send("> **Emergency shutdown**")
 		await client.close()
 	elif message.content == ("!soup help"):
-		await message.author.send("Hello world!")
+		await message.author.send(
+		"> **List of Commands**\n"
+		"```\n"
+		"!soup news-ny			- Receiving the first 15 headlines in NYTimes\n"
+		"!soup news-tom	       - Receiving the first 15 headlines in Toms Hardware\n"
+		"!soup hello		      - Talk with a robot\n"
+		"!soup eat				- 3 second delay shutdown\n"
+		"!soup spill			  - Emergency shutdown (immediate shutdown)\n"
+		"```"
+		)
 
 client.run(token)
