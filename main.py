@@ -134,7 +134,7 @@ async def on_message(message):
 		"!soup news-ny			- Receiving the first 15 headlines in NYTimes\n"
 		"!soup news-tom	       - Receiving the first 15 headlines in Toms Hardware\n"
 		"!soup hello		      - Talk with a robot\n"
-		"!soup eat				- 3 second delay shutdown\n"
+		"!soup eat				- Graceful shutdown\n"
 		"!soup spill			  - Emergency shutdown (immediate shutdown)\n"
 		"```"
 		)
