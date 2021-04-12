@@ -1,9 +1,8 @@
-# bot.py
 import os
 from datetime import datetime
-import discord
+import discord          #import discord lib
 from dotenv import load_dotenv
-import DannyVuonglab1q5
+import DannyVuonglab1q5 #import from my custom lib
 import re				#import the regular expressions library
 #import math				#import math methods
 from bs4 import BeautifulSoup	#import string parser
@@ -39,7 +38,7 @@ async def on_message(message):
 		return
 	elif message.content == ("!soup news-ny"):
 		#await message.channel.send(parserny)
-		await message.channel.send("<headlines>News Articles ニュース記事")
+		await message.channel.send("News Articles ニュース記事 [New York Times]")
 		article = 1		#start counter at 1
 		url = 'https://www.nytimes.com/'
 		#https://www.nytimes.com/
@@ -52,7 +51,8 @@ async def on_message(message):
         
 		for title in soup.find_all('article'):		#print out all the strings starting with the h2 tag
 			try:
-				await message.channel.send("......<article>" + title.find('h2').text + "</article>")	#print the article count number followed by the name of the headline
+				await message.channel.send(str(article) + "........[article] " + "**" + title.find('h2').text + "**")	#print the article count number followed by the name of the headline
+				print(article)
 			except AttributeError:
 				break
 			article += 1		#increment counter by 1 for every loop
@@ -60,10 +60,10 @@ async def on_message(message):
 				article = 1
 				break
 			#await asyncio.sleep(1)
-		await message.channel.send("</headlines>")
+		await message.channel.send("Those are the top headlines for today!")
 			
 	elif message.content == ("!soup news-tom"):
-		await message.channel.send("<headlines>News Articles ニュース記事")
+		await message.channel.send("News Articles ニュース記事 [Tom's Hardware")
 		article = 1		#start counter at 1
 		url = 'https://www.tomshardware.com/'
 
@@ -72,9 +72,9 @@ async def on_message(message):
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
         
-		for title in soup.find_all('header'):		#print out all the strings starting with the h2 tag
+		for title in soup.find_all('class=\"article-name\"'):		#print out all the strings referenced by article-name class
 			try:
-				await message.channel.send("......<article>" + title.find('h3').text + "</article>")	#print the article count number followed by the name of the headline
+				await message.channel.send(str(article) + "........[article] "  + "**" + title.find('h3').text + "**" )	#print the article count number followed by the name of the headline
 			except AttributeError:
 				break
 			article += 1		#increment counter by 1 for every loop
@@ -82,7 +82,33 @@ async def on_message(message):
 				article = 1
 				break
 			#await asyncio.sleep(1)
-		await message.channel.send("</headlines>")
+			await message.channel.send("Those are the top headlines for today!")
+	elif message.content == ("!soup news-hna"):
+		#await message.channel.send(parserny)
+		await message.channel.send("Hikari no Akari OST ニュース記事 [HNA Updates]")
+		article = 1		#start counter at 1
+		url = 'https://hikarinoakari.com/'
+		#https://www.nytimes.com/
+		#https://www.bloomberg.com/
+
+		r = requests.get(url)	#get method to get url
+		r_html = r.text		#convert html into text
+
+		soup = BeautifulSoup(r_html)	#parser to parse all the text
+        
+		for title in soup.find_all("h3", class_="entry-title td-module-title"):		#print out all the strings starting with the h2 tag
+			try:
+				await message.channel.send(str(article) + "........[song] " + "**" + title.find('a').text + "**")	#print the article count number followed by the name of the headline
+				print(article)
+			except AttributeError:
+				break
+			article += 1		#increment counter by 1 for every loop
+			if article == 16:
+				article = 1
+				break
+			#await asyncio.sleep(1)
+		await message.channel.send("Those are the top releases for today!")
+			
 
 	elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
@@ -90,15 +116,17 @@ async def on_message(message):
 		await message.channel.send("lmao")
 	elif message.content == ("lmao"):
 		await message.channel.send("ayy")
-	#elif message.content == ("!soup help"):
-		#await message.client.user.send("Hello world")
 	elif message.content == ("!soup eat"):
-		await message.channel.send("Bye bye! じゃあまたね")
+		await message.channel.send("Bye bye! じゃあまたね~")
 		await asyncio.sleep(3)
 		await client.close()
 	elif message.content == ("!soup spill"):
 		await message.channel.send("> **Emergency shutdown**")
 		await client.close()
+	#elif message.content == ("!soup refill"):
+		#await message.channel.send("> **Rebooting...**")
+		#await asyncio.sleep(3)
+		#await client.clear()
 	elif message.content == ("!soup help"):
 		await message.author.send(
 		"> **List of Commands**\n"
