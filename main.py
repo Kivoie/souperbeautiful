@@ -37,15 +37,12 @@ async def on_message(message):
 	if message.author == client.user:
 		return
 	elif message.content == ("!soup news-ny"):
-		#await message.channel.send(parserny)
 		await message.channel.send("News Articles ニュース記事 [New York Times]")
 		article = 1		#start counter at 1
 		url = 'https://www.nytimes.com/'
-		#https://www.nytimes.com/
-		#https://www.bloomberg.com/
 
 		r = requests.get(url)	#get method to get url
-		r_html = r.text		#convert html into text
+		r_html = r.text		    #convert html into text
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
         
@@ -54,61 +51,56 @@ async def on_message(message):
 				await message.channel.send(str(article) + "........[article] " + "**" + title.find('h2').text + "**")	#print the article count number followed by the name of the headline
 				print(article)
 			except AttributeError:
+				print("ERROR: AttributeError")
 				break
 			article += 1		#increment counter by 1 for every loop
 			if article == 16:
 				article = 1
 				break
-			#await asyncio.sleep(1)
-		await message.channel.send("Those are the top headlines for today!")
-			
+		await message.channel.send("These are the top headlines for today!")
 	elif message.content == ("!soup news-tom"):
 		await message.channel.send("News Articles ニュース記事 [Tom's Hardware")
 		article = 1		#start counter at 1
 		url = 'https://www.tomshardware.com/'
 
 		r = requests.get(url)	#get method to get url
-		r_html = r.text		#convert html into text
+		r_html = r.text		    #convert html into text
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
         
-		for title in soup.find_all('class=\"article-name\"'):		#print out all the strings referenced by article-name class
+		for title in soup.find_all(class_="article-name"):		#print out all the strings referenced by article-name class
 			try:
 				await message.channel.send(str(article) + "........[article] "  + "**" + title.find('h3').text + "**" )	#print the article count number followed by the name of the headline
 			except AttributeError:
+				print("ERROR: AttributeError")
 				break
 			article += 1		#increment counter by 1 for every loop
 			if article == 16:
 				article = 1
 				break
-			#await asyncio.sleep(1)
 			await message.channel.send("Those are the top headlines for today!")
 	elif message.content == ("!soup news-hna"):
-		#await message.channel.send(parserny)
 		await message.channel.send("Hikari no Akari OST ニュース記事 [HNA Updates]")
 		article = 1		#start counter at 1
 		url = 'https://hikarinoakari.com/'
-		#https://www.nytimes.com/
-		#https://www.bloomberg.com/
-
+        
 		r = requests.get(url)	#get method to get url
-		r_html = r.text		#convert html into text
+		r_html = r.text		    #convert html into text
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
         
-		for title in soup.find_all("h3", class_="entry-title td-module-title"):		#print out all the strings starting with the h2 tag
+		for title in soup.find_all('h3'):		#print out all the strings starting with the h3 tag
 			try:
 				await message.channel.send(str(article) + "........[song] " + "**" + title.find('a').text + "**")	#print the article count number followed by the name of the headline
 				print(article)
 			except AttributeError:
+				print("ERROR: AttributeError")
 				break
 			article += 1		#increment counter by 1 for every loop
 			if article == 16:
 				article = 1
 				break
-			#await asyncio.sleep(1)
 		await message.channel.send("Those are the top releases for today!")
-			
 
 	elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
@@ -118,31 +110,33 @@ async def on_message(message):
 		await message.channel.send("ayy")
 	elif message.content == ("!soup eat"):
 		await message.channel.send("Bye bye! じゃあまたね~")
+		await asyncio.sleep(1)
+		await message.channel.send("> **Shutting down...**")
 		await asyncio.sleep(3)
 		await client.close()
 	elif message.content == ("!soup spill"):
 		await message.channel.send("> **Emergency shutdown**")
 		await client.close()
-	#elif message.content == ("!soup refill"):
-		#await message.channel.send("> **Rebooting...**")
-		#await asyncio.sleep(3)
-		#await client.clear()
+#	elif message.content == ("!soup refill"):
+#		await message.channel.send("> **Rebooting...**")
+#		await asyncio.sleep(3)
+#		await client.clear()
 	elif message.content == ("!soup help"):
 		await message.author.send(
 		"> **List of Commands**\n"
 		"```\n"
 		"!soup news-ny			- Receiving the first 15 headlines in NYTimes\n"
-		"!soup news-tom	       - Receiving the first 15 headlines in Toms Hardware\n"
-		"!soup hello		      - Talk with a robot\n"
-		"!soup eat				- Graceful shutdown\n"
+		"!soup news-tom		   - Receiving the first 15 headlines in Toms Hardware\n"
+		"!soup hello			  - Talk with a robot\n"
+		"!soup eat				- Delay shutdown\n"
 		"!soup spill			  - Emergency shutdown (immediate shutdown)\n"
 		"```"
 		)
-	# elif message.content == ("!soup newsapi"):
-		# url = ('https://newsapi.org/v2/top-headlines?'
-       # 'country=us&'
-       # 'apiKey=7f2826a87e5a4061af386613e358c664')
-		# response = requests.get(url)
-		# print(response.json())
+#	elif message.content == ("!soup newsapi"):
+#		url = ('https://newsapi.org/v2/top-headlines?'
+#        'country=us&'
+#        'apiKey=7f2826a87e5a4061af386613e358c664')
+#		response = requests.get(url)
+#		print(response.json())
 
 client.run(token)
