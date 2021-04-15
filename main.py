@@ -68,9 +68,10 @@ async def on_message(message):
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
         
-		for title in soup.find_all(class_="article-name"):		#print out all the strings referenced by article-name class
+		for title in soup.find_all('figcaption'):		#print out all the strings referenced by article-name class
 			try:
-				await message.channel.send(str(article) + "........[article] "  + "**" + title.find('h3').text + "**" )	#print the article count number followed by the name of the headline
+				await message.channel.send(str(article) + "........[article] "  + "**" + title.find(class_="article-name").text + "**" )	#print the article count number followed by the name of the headline
+				print(article)
 			except AttributeError:
 				print("ERROR: AttributeError")
 				break
@@ -78,9 +79,9 @@ async def on_message(message):
 			if article == 16:
 				article = 1
 				break
-			await message.channel.send("Those are the top headlines for today!")
+		await message.channel.send("Those are the top headlines for today!")
 	elif message.content == ("!soup news-hna"):
-		await message.channel.send("Hikari no Akari OST ニュース記事 [HNA Updates]")
+		await message.channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
 		article = 1		#start counter at 1
 		url = 'https://hikarinoakari.com/'
         
