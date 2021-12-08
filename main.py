@@ -22,14 +22,14 @@ async def on_ready():	#The following scripts in on_ready() will only run everyti
 	for guild in client.guilds:
 			if guild.name == guild:
 				break
-				
+
 	#GUILD = discord.utils.get(client.guilds, name=guild)
 	print("All systems go!! \n(Press CTRL + C to terminate script at any time. There will be a delay before bot logs off.")
 	print(f"{client.user} is online in {guild.name} (id: {guild.id}) at system time " + str(datetime.now()) + ".")
 	#print(GUILD)
 	members = '\n - '.join([member.name for member in guild.members])
 	print(f'Guild Members:\n - {members}')
-	
+
 	await client.change_presence(activity=discord.Game(name='instead of working'))
 
 @client.event
@@ -45,7 +45,7 @@ async def on_message(message):
 		r_html = r.text		    #convert html into text
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
-        
+
 		for title in soup.find_all('article'):		#print out all the strings starting with the h2 tag
 			try:
 				await message.channel.send(str(article) + "........[article] " + "**" + title.find('h2').text + "**")	#print the article count number followed by the name of the headline
@@ -67,7 +67,7 @@ async def on_message(message):
 		r_html = r.text		    #convert html into text
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
-        
+
 		for title in soup.find_all('figcaption'):		#print out all the strings referenced by article-name class
 			try:
 				await message.channel.send(str(article) + "........[article] "  + "**" + title.find(class_="article-name").text + "**" )	#print the article count number followed by the name of the headline
@@ -84,12 +84,12 @@ async def on_message(message):
 		await message.channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
 		article = 1		#start counter at 1
 		url = 'https://hikarinoakari.com/'
-        
+
 		r = requests.get(url)	#get method to get url
 		r_html = r.text		    #convert html into text
 
 		soup = BeautifulSoup(r_html)	#parser to parse all the text
-        
+
 		for title in soup.find_all('h3'):		#print out all the strings starting with the h3 tag
 			try:
 				await message.channel.send(str(article) + "........[song] " + "**" + title.find('a').text + "**")	#print the article count number followed by the name of the headline
