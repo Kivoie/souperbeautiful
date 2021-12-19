@@ -25,7 +25,7 @@ async def on_ready():	#The following scripts in on_ready() will only run everyti
 
 	#GUILD = discord.utils.get(client.guilds, name=guild)
 	print("All systems go!! \n(Press CTRL + C to terminate script at any time. There will be a delay before bot logs off.")
-	print(f"{client.user} is online in {guild.name} (id: {guild.id}) at system time " + str(datetime.now()) + ".")
+	print("{client.user} is online in {guild.name} (id: {guild.id}) at system time " + str(datetime.now()) + ".")
 	#print(GUILD)
 	members = '\n - '.join([member.name for member in guild.members])
 	print(f'Guild Members:\n - {members}')
@@ -39,7 +39,7 @@ async def on_message(message):
 	elif message.content == ("!soup news-ny"):
 		await message.channel.send("News Articles ニュース記事 [New York Times]")
 		article = 1		#start counter at 1
-		url = 'https://www.nytimes.com/'
+		url = 'https://www.nytimes.com/ca/'
 
 		r = requests.get(url)	#get method to get url
 		r_html = r.text		    #convert html into text
@@ -48,8 +48,8 @@ async def on_message(message):
 
 		for title in soup.find_all('article'):		#print out all the strings starting with the h2 tag
 			try:
-				await message.channel.send(str(article) + "........[article] " + "**" + title.find('h2').text + "**")	#print the article count number followed by the name of the headline
-				print(article)
+				await message.channel.send(str(article) + "........[article] " + "**" + title.find('h1').text + "**")	#print the article count number followed by the name of the headline
+				#print(article)
 			except AttributeError:
 				print("ERROR: AttributeError")
 				break
@@ -57,7 +57,8 @@ async def on_message(message):
 			if article == 16:
 				article = 1
 				break
-		await message.channel.send("These are the top headlines for today!")
+		await message.channel.send("These are the top headlines for today! Find them at "+ "<" + url + ">")
+
 	elif message.content == ("!soup news-tom"):
 		await message.channel.send("News Articles ニュース記事 [Tom's Hardware")
 		article = 1		#start counter at 1
@@ -71,7 +72,7 @@ async def on_message(message):
 		for title in soup.find_all('figcaption'):		#print out all the strings referenced by article-name class
 			try:
 				await message.channel.send(str(article) + "........[article] "  + "**" + title.find(class_="article-name").text + "**" )	#print the article count number followed by the name of the headline
-				print(article)
+				#print(article)
 			except AttributeError:
 				print("ERROR: AttributeError")
 				break
@@ -79,7 +80,8 @@ async def on_message(message):
 			if article == 16:
 				article = 1
 				break
-		await message.channel.send("Those are the top headlines for today!")
+		await message.channel.send("Those are the top headlines for today! Find more at " + "<" + url + ">")
+
 	elif message.content == ("!soup news-hna"):
 		await message.channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
 		article = 1		#start counter at 1
@@ -93,7 +95,7 @@ async def on_message(message):
 		for title in soup.find_all('h3'):		#print out all the strings starting with the h3 tag
 			try:
 				await message.channel.send(str(article) + "........[song] " + "**" + title.find('a').text + "**")	#print the article count number followed by the name of the headline
-				print(article)
+				#print(article)
 			except AttributeError:
 				print("ERROR: AttributeError")
 				break
@@ -101,43 +103,53 @@ async def on_message(message):
 			if article == 16:
 				article = 1
 				break
-		await message.channel.send("Those are the top releases for today!")
+		await message.channel.send("Those are the top releases for today! Find more at " + "<" + url + ">")
 
 	elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
+
 	elif message.content == ("ayy"):
 		await message.channel.send("lmao")
+
 	elif message.content == ("lmao"):
 		await message.channel.send("ayy")
+
 	elif message.content == ("!soup eat"):
 		await message.channel.send("Bye bye! じゃあまたね~")
 		await asyncio.sleep(1)
 		await message.channel.send("> **Shutting down...**")
 		await asyncio.sleep(3)
 		await client.close()
+
 	elif message.content == ("!soup spill"):
 		await message.channel.send("> **Emergency shutdown**")
 		await client.close()
+
 #	elif message.content == ("!soup refill"):
 #		await message.channel.send("> **Rebooting...**")
 #		await asyncio.sleep(3)
 #		await client.clear()
+
 	elif message.content == ("!soup help"):
 		await message.author.send(
 		"> **List of Commands**\n"
 		"```\n"
 		"!soup news-ny			- Receiving the first 15 headlines in NYTimes\n"
 		"!soup news-tom		   - Receiving the first 15 headlines in Toms Hardware\n"
+		"!soup news-hna		   - Get the first 15 headlines from Hikari no Akari OST\n"
+		"!soup news-slash	     - Get the first 15 headlines from SlashDot news\n"
 		"!soup hello			  - Talk with a robot\n"
 		"!soup eat				- Delay shutdown\n"
 		"!soup spill			  - Emergency shutdown (immediate shutdown)\n"
 		"```"
 		)
-#	elif message.content == ("!soup newsapi"):
-#		url = ('https://newsapi.org/v2/top-headlines?'
-#        'country=us&'
-#        'apiKey=7f2826a87e5a4061af386613e358c664')
-#		response = requests.get(url)
-#		print(response.json())
+'''
+	elif message.content == ("!soup newsapi"):
+		url = ('https://newsapi.org/v2/top-headlines?'
+        'country=us&'
+        'apiKey=7f2826a87e5a4061af386613e358c664')
+		response = requests.get(url)
+		print(response.json())
+'''
 
 client.run(token)
