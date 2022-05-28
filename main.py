@@ -85,7 +85,7 @@ async def on_message(message):
 	elif message.content == ("!soup news-hna"):
 		await message.channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
 		article = 1		#start counter at 1
-		url = 'https://hikarinoakari.com/'
+		url = 'https://hikarinoakari.com/'      #domain https://hikarinoakariost.info deprecated? Anyways, using new domain
 
 		r = requests.get(url)	#get method to get url
 		r_html = r.text		    #convert html into text
@@ -108,11 +108,11 @@ async def on_message(message):
 	elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
 
-	elif message.content == ("ayy"):
-		await message.channel.send("lmao")
+	#elif message.content == ("ayy"):
+	#	await message.channel.send("lmao")
 
-	elif message.content == ("lmao"):
-		await message.channel.send("ayy")
+	#elif message.content == ("lmao"):
+	#	await message.channel.send("ayy")
 
 	elif message.content == ("!soup eat"):
 		await message.channel.send("Bye bye! じゃあまたね~")
