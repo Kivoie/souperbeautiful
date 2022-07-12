@@ -1,14 +1,12 @@
 # souperbeautiful
-### A Discord bot for parsing HTML strings/tags and outputs them as messages in discord text chat.
+### A Discord bot for parsing HTML strings/tags and outputs them as messages in discord text chat. Intended to be hosted on a small SoC (Pi, Jetson, etc).
 
 As the title suggests, a Discord bot written in Python that uses the BeautifulSoup4 module to parse and display strings from webpages. This is a discord bot that will hopefully be capable of performing many more tasks in the near future.  
 
-If you wish to automate this bot, write a simple Windows batch script (2 or 3 lines) that runs as a background service upon system startup.  
-
 ## To Do
-- Along with the headlines, respond with the URLs of their respective headlines (url may or may not be embeded)
+- Along with the headlines, reply with the URIs of their respective headlines (uri may not be embeded)
 - Add parsing for other websites
-	- hikarinoakariost
+	- hikarinoakariost (guarded by cloudflare)
 	- Tom's Hardware
 	- Bloomberg
 	- ArsTechnica
@@ -16,8 +14,7 @@ If you wish to automate this bot, write a simple Windows batch script (2 or 3 li
 	- IGN
 - Automate parsing/message procedure instead of always being prompted by a user
 - Add debugging and activity logging in the python script
-- Containerize (Docker) and integrate with GitHub as a package
-- Bot status (Online/Offline/Malfunction) logging with timestamps to ASCII file (DOES NOT INCLUDE BOT ACTIVITY)  
+- Bot status (Online/Offline/Malfunction) logging with timestamps to ASCII file on the filesystem  
 
 ## Changelog
 ### 12/7/2019
