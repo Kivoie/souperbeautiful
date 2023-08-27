@@ -131,5 +131,6 @@ dmypy.json
 # Custom files and paths
 .temp
 .temp/
+ak.txt
 
 
