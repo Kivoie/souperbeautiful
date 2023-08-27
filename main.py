@@ -1,14 +1,15 @@
 import os
+import re				#import the regular expressions library
 from datetime import datetime
+import requests			#import string parser
+import asyncio		#asynchronous concurrency
 import discord          #import discord lib
 from dotenv import load_dotenv
 import DannyVuonglab1q5 #import from my custom lib
-import re				#import the regular expressions library
 #import math				#import math methods
 from bs4 import BeautifulSoup	#import string parser
-import requests			#import string parser
-import asyncio
-
+import subprocess
+import ak_operators
 #parserny = DannyVuonglab1q5.soupny()
 
 load_dotenv()
@@ -129,6 +130,22 @@ async def on_message(message):
 #		await message.channel.send("> **Rebooting...**")
 #		await asyncio.sleep(3)
 #		await client.clear()
+
+#	elif message.content == ("!soup headpat"):
+#		await message.channel.send("> Uploading...")
+#		await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/PixivUtil2/Gree_N (83399472)/103079168_p0.jpg'))
+#		
+#		fs = subprocess.Popen('df | head -1 && df -hV | grep -i blk', stdout=subprocess.PIPE, shell=True)
+#		await message.channel.send(f"> Uploading finished\n```df | head -1 && df -hV | grep -i blk\n{fs}```")
+
+	elif message.content == ("!soup ak-chars"):
+		await message.channel.send("> Fetching data...")
+		ak_operators.get_data()
+		await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
+		await message.channel.send("Upload complete! (click Expand to see more)")
+		
+		with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
+			tempfile.write('')
 
 	elif message.content == ("!soup help"):
 		await message.author.send(
