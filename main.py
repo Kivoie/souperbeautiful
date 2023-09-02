@@ -155,8 +155,9 @@ async def on_message(message):
 		"!soup news-tom		   - Receiving the first 15 headlines in Toms Hardware\n"
 		"!soup news-hna		   - Get the first 15 headlines from Hikari no Akari OST\n"
 		"!soup news-slash	     - Get the first 15 headlines from SlashDot news\n"
+		"!soup ak-chars		   - List upcoming Arknights operators (NA)\n"
 		"!soup hello			  - Talk with a robot\n"
-		"!soup eat				- Delay shutdown\n"
+		"!soup eat				- Normal shutdown\n"
 		"!soup spill			  - Emergency shutdown (immediate shutdown)\n"
 		"```"
 		)
