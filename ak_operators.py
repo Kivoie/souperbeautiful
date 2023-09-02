@@ -31,31 +31,33 @@ def get_data():
     operator_times_na = table.findAll("td", {"class":"views-field views-field-field-operator-release-date-na"})	#all operator release dates (NA), aka Global
     
     
-    ##### Parse for all the unreleased operators in NA #####
+    ##### Parse for all the UNRELEASED operators in NA #####
     
     count = 0						#counter for counting the number entries
     output_table_tbd = []					#initialize an array to store all the results later
     for i in range (0, len(operator_times_na)):		#iterate through all the operators listed in the table
     
         if str(operator_times_na[i].text).strip() == "":		#there is a trailing character (space or CRLF, I can't tell). strip it to make it easier to parse
-            if str(operator_names[i].text).strip() == 'Tulip' or str(operator_names[i].text).strip() == 'Reserve Operator - Defender' or str(operator_names[i].text).strip() == 'Vector - APRIL FOOLS!' or str(operator_names[i].text).strip() == 'Ashlock':
+            if str(operator_names[i].text).strip() == 'Tulip' or str(operator_names[i].text).strip() == 'Reserve Operator - Defender' or 'Vector - APRIL FOOLS!' in str(operator_names[i].text).strip() or str(operator_names[i].text).strip() == 'Ashlock':
                 continue	#just skip these 4 operators because there is some missing information from the editor
             else:
     
-                #add the new entries to the table
+                #add the new entries to the table. the regex below is to remove duplicate words because "headhunting headhunting" appears in the html.
                 new_entry = [(count + 1 + 5), operator_names[i].text, str(re.sub(r'\b(\w+)\b(?=.*\b\1\b)', '', operator_obtain[i].text.replace("\n", " "))).strip(), operator_times_cn[i].text.strip(), operator_times_na[i].text.strip()]
                 output_table_tbd.append(new_entry)
                 
                 count += 1
     
     
-    ##### Parse for all the released operators in NA #####
+    ##### Parse for all the RELEASED operators in NA #####
     
     release_context = 5					#integer to count how many RELEASED operators to include for context
     count = 0						#counter for counting the number of entries
     output_table_released = []				#initialize an array to store all the results later
     for i in range (0, 40):
         if operator_times_na[-i].text.strip():
+            if 'Vector - APRIL FOOLS!' in str(operator_names[-i].text):
+                continue
             
             #add the new entries to a different table
             new_entry = [(release_context - count), operator_names[-i].text, str(re.sub(r'\b(\w+)\b(?=.*\b\1\b)', '', operator_obtain[-i].text.replace("\n", " "))).strip(), operator_times_cn[-i].text.strip(), operator_times_na[-i].text.strip()]
@@ -75,8 +77,8 @@ def get_data():
     
     #print statements to output everything from above
     timestamp = str(datetime.now().strftime("%Y%m%d-%H:%M:%S"))
-    #print(f"Dan's script: 'ak-operators.py' executed on {}")
-    #print(tabulate(combined_array, headers=['#', 'Operator', 'Acquisition', 'CN Release', 'NA Release']))
+    print(f"Dan's script: 'ak-operators.py' executed on {timestamp}")
+    print(tabulate(combined_array, headers=['#', 'Operator', 'Acquisition', 'CN Release', 'NA Release']))
 
     with open(tempfile, "w+") as output_file:
 
