@@ -16,7 +16,35 @@ load_dotenv()
 token = os.getenv('SOUPER_DISCORD_TOKEN')	#Load the discord token value from the .env file
 guild = os.getenv('SOUPER_DISCORD_GUILD')	#Load the guild name from the .env file
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.typing = False
+intents.presences = False
+
+client = discord.Client(intents=intents)
+
+async def schedule_ak_chars():
+	await client.wait_until_ready()		#wait until the bot is fully initialized before continuing
+
+	channel = client.get_channel(915077470280122388)	#Right click text channel and select "Copy Channel ID"
+	try:
+		while not client.is_closed():
+			current_time = datetime.now()
+			if current_time.weekday() == 0 and current_time.hour == 10 and current_time.minute == 0:
+				await channel.send("**Automated Task**Scheduled for Monday 10 AM EST, executed on `" + str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + "`")
+				await channel.send("> Fetching data...")
+				ak_operators.get_data()		# Fetches, scrapes, and parses the data from an online blog
+				await channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
+				await channel.send("Upload complete! Click Expand to see more (mobile support coming soon)")
+	
+				# clear the file
+				with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
+					tempfile.write('')
+			await asyncio.sleep(60)
+	except Exception as e:
+		try:
+			await channel.send(f"**Exception caught in `schedule_ak_chars()`**\n```{e}```")
+		finally:
+			print(f"Exception caught in schedule_ak_chars()\n{e}")
 
 @client.event
 async def on_ready():	#The following scripts in on_ready() will only run everytime the bot comes online
@@ -30,6 +58,9 @@ async def on_ready():	#The following scripts in on_ready() will only run everyti
 	#print(GUILD)
 	members = '\n - '.join([member.name for member in guild.members])
 	print(f'Guild Members:\n - {members}')
+	
+	print("started the loop")
+	client.loop.create_task(schedule_ak_chars())
 
 	await client.change_presence(activity=discord.Game(name='instead of working'))
 
