@@ -53,11 +53,11 @@ async def on_ready():	#The following scripts in on_ready() will only run everyti
 				break
 
 	#GUILD = discord.utils.get(client.guilds, name=guild)
-	print("All systems go!! \n(Press CTRL + C to terminate script at any time. There will be a delay before bot logs off.")
-	print("{client.user} is online in {guild.name} (id: {guild.id}) at system time " + str(datetime.now()) + ".")
+	print("Souperbeautiful started at system time " + (str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + ". All systems go!!\n(Press CTRL + C to terminate script at any time. There will be a delay before bot logs off.")
+	#print("{client.user} is online in {guild.name} (id: {guild.id}) at system time " + str(datetime.now()) + ".")
 	#print(GUILD)
-	members = '\n - '.join([member.name for member in guild.members])
-	print(f'Guild Members:\n - {members}')
+	#members = '\n - '.join([member.name for member in guild.members])
+	#print(f'Guild Members:\n - {members}')
 	
 	print("started the loop")
 	client.loop.create_task(schedule_ak_chars())
