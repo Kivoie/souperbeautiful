@@ -142,7 +142,7 @@ async def on_message(message):
 		await message.channel.send("> Fetching data...")
 		ak_operators.get_data()
 		await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
-		await message.channel.send("Upload complete! (click Expand to see more)")
+		await message.channel.send("Upload complete! Click Expand to see more (mobile support coming soon)")
 		
 		with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
 			tempfile.write('')
