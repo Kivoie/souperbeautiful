@@ -22,6 +22,7 @@ intents.presences = False
 
 client = discord.Client(intents=intents)
 
+# schedule to send list of ak chars every monday at 10:00
 async def schedule_ak_chars():
 	await client.wait_until_ready()		#wait until the bot is fully initialized before continuing
 
@@ -46,6 +47,53 @@ async def schedule_ak_chars():
 		finally:
 			print(f"Exception caught in schedule_ak_chars()\n{e}")
 
+'''
+async def news_hna(channel):
+	await client.wait_until_ready()
+	await channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
+	article = 1		#start counter at 1
+	url = 'https://hikarinoakari.com/'      #domain https://hikarinoakariost.info deprecated? Anyways, using new domain
+
+	r = requests.get(url)	#get method to get url
+	r_html = r.text		    #convert html into text
+
+	soup = BeautifulSoup(r_html)	#parser to parse all the text
+
+	for title in soup.find_all('h3'):		#print out all the strings starting with the h3 tag
+		try:
+			await channel.send(str(article) + ") [song] " + "**" + title.find('a').text + "**")	#print the article count number followed by the name of the headline
+			#print(article)
+		except AttributeError:
+			print("ERROR: AttributeError")
+			break
+		article += 1		#increment counter by 1 for every loop
+		if article == 16:
+			article = 1
+			break
+	await channel.send("Those are the top releases for today! Find more at " + "<" + url + ">")
+
+async def schedule_news_hna():
+	await client.wait_until_ready()
+
+	channel = client.get_channel(652711785023143936)
+	try:
+		while not client.is_closed():
+			current_time = datetime.now()
+			if (current_time.weekday() == 0 and current_time.hour == 10 and current_time.minute == 1) \
+			or (current_time.weekday() == 2 and current_time.hour == 10 and current_time.minute == 1) \
+			or (current_time.weekday() == 4 and current_time.hour == 13 and current_time.minute == 11):
+				try:
+					await news_hna(channel)
+				except Exception as e:
+					print(f"Exception caught within news_hna()\n{e}")
+					channel.send("Exception caught within news_hna()\n```" + str(e) + "```")
+			await asyncio.sleep(60)
+	except Exception as e:
+		print(f"Exception caught in schedule_news_hna()\n{e}")
+		await channel.send("Exception caught in schedule_news_hna()\n```" + str(e) + "```")
+'''
+			
+
 @client.event
 async def on_ready():	#The following scripts in on_ready() will only run everytime the bot comes online
 	for guild in client.guilds:
@@ -53,15 +101,17 @@ async def on_ready():	#The following scripts in on_ready() will only run everyti
 				break
 
 	#GUILD = discord.utils.get(client.guilds, name=guild)
-	print("Souperbeautiful started at system time " + (str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + ". All systems go!!\n(Press CTRL + C to terminate script at any time. There will be a delay before bot logs off.")
+	print("[debug] Souperbeautiful started at system time " + (str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + ". All systems go!!\n(Press CTRL + C to terminate script at any time. There will be a delay before bot logs off."))
 	#print("{client.user} is online in {guild.name} (id: {guild.id}) at system time " + str(datetime.now()) + ".")
 	#print(GUILD)
 	#members = '\n - '.join([member.name for member in guild.members])
 	#print(f'Guild Members:\n - {members}')
-	
-	print("started the loop")
-	client.loop.create_task(schedule_ak_chars())
 
+	print("[debug] Initializing loops...")
+	client.loop.create_task(schedule_ak_chars())	#init ak loop task
+	#client.loop.create_task(schedule_news_hna())	#init hna loop task
+
+	print("[debug] Updating activity name...")
 	await client.change_presence(activity=discord.Game(name='instead of working'))
 
 @client.event
