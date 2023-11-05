@@ -17,6 +17,10 @@ As the title suggests, a Discord bot written in Python that uses the BeautifulSo
 - Bot status (Online/Offline/Malfunction) logging with timestamps to ASCII file on the filesystem  
 
 ## Changelog
+### 11/5/2023
+- Added more commands
+- Added command scheduling (hard coded)
+
 ### 12/7/2019
 - Bot can parse HTML strings and send HTML strings as messages to Discord text chat
 - Basic bot status logging in the main python script
