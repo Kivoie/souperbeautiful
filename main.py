@@ -15,6 +15,7 @@ import ak_operators
 load_dotenv()
 token = os.getenv('SOUPER_DISCORD_TOKEN')	#Load the discord token value from the .env file
 guild = os.getenv('SOUPER_DISCORD_GUILD')	#Load the guild name from the .env file
+admin_id = int(os.getenv('ADMIN_USER_ID'))
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -196,16 +197,22 @@ async def on_message(message):
 	#elif message.content == ("lmao"):
 	#	await message.channel.send("ayy")
 
-	elif message.content == ("!soup eat"):
+	elif message.content == ("!soup eat") and message.author.id == admin_id:
 		await message.channel.send("Bye bye! じゃあまたね~")
 		await asyncio.sleep(1)
 		await message.channel.send("> **Shutting down...**")
 		await asyncio.sleep(3)
 		await client.close()
 
-	elif message.content == ("!soup spill"):
+	elif message.content == ("!soup eat") and not message.author.id == admin_id:
+		await message.channel.send("You are not authorized to issue that command!")
+
+	elif message.content == ("!soup spill") and message.author.id == admin_id:
 		await message.channel.send("> **Emergency shutdown**")
 		await client.close()
+
+	elif message.content == ("!soup spill") and not message.author.id == admin_id:
+		await message.channel.send("You are not authorized to issue that command!")
 
 #	elif message.content == ("!soup refill"):
 #		await message.channel.send("> **Rebooting...**")
