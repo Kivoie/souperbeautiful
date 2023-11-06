@@ -32,7 +32,7 @@ async def schedule_ak_chars():
 		while not client.is_closed():
 			current_time = datetime.now()
 			if current_time.weekday() == 0 and current_time.hour == 10 and current_time.minute == 0:
-				await channel.send("**Automated Task**Scheduled for Monday 10 AM EST, executed on `" + str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + "`")
+				await channel.send("**Automated Task** Scheduled for Monday 10:00 EST, executed on `" + str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + "`")
 				await channel.send("> Fetching data...")
 				ak_operators.get_data()		# Fetches, scrapes, and parses the data from an online blog
 				await channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
