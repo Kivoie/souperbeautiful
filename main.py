@@ -235,6 +235,9 @@ async def on_message(message):
 		with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
 			tempfile.write('')
 
+	elif message.content == ("!soup bc"):
+		await message.channel.send("Have fun in BC!")
+
 	elif message.content == ("!soup help"):
 		await message.author.send(
 		"> **List of Commands**\n"
