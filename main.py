@@ -10,12 +10,22 @@ import DannyVuonglab1q5 #import from my custom lib
 from bs4 import BeautifulSoup	#import string parser
 import subprocess
 import ak_operators
+import xmlrpc.client
 #parserny = DannyVuonglab1q5.soupny()
 
 load_dotenv()
 token = os.getenv('SOUPER_DISCORD_TOKEN')	#Load the discord token value from the .env file
 guild = os.getenv('SOUPER_DISCORD_GUILD')	#Load the guild name from the .env file
 admin_id = int(os.getenv('ADMIN_USER_ID'))
+guest_id = int(os.getenv('GUEST_USER_ID'))
+mc_host = str(os.getenv('MC_HOST'))
+mc_dport = os.getenv('MC_DPORT')
+mc_pw = str(os.getenv('MC_PW'))
+mc_command1 = str(os.getenv('MC_COMMAND1'))
+server_ip = os.getenv('RPC_HOST')
+server_port = os.getenv('RPC_PORT')
+server_url = "http://" + str(server_ip) + ":" + str(server_port)
+
 
 intents = discord.Intents.default()
 intents.typing = False
@@ -237,6 +247,37 @@ async def on_message(message):
 
 	elif message.content == ("!soup bc"):
 		await message.channel.send("Have fun in BC!")
+
+	elif message.content == ("!soup mc") and message.channel.id == 979855384443502642:
+		await message.channel.send("> Fetching data...")
+		try:
+			result = subprocess.Popen([f'sudo mcrcon -H {mc_host} -P {mc_dport} -p {mc_pw} {mc_command1}'], stdout=subprocess.PIPE, shell=True)
+		except Exception as e:
+			result = "mcrcon encountered an error:" + str(e)
+		else:
+			result = re.sub(r"\\n", '\n', str(result.communicate()[0]).strip())
+			result = str(re.sub(r"b\'", '', str(result))).rstrip("'")
+			result = str(re.sub(r'\\x1b\[0m', '', str(result)))
+
+		await message.channel.send(f'```{result}```')
+
+	elif message.content == ("!soup restart-mc") and message.channel.id == 979855384443502642 and (message.author.id == admin_id or message.author.id == guest_id):
+		await message.channel.send("> Sending restart signal...")
+		try:
+			call_peer = xmlrpc.client.ServerProxy(server_url)
+		except Exception as e:
+			output = str(e)
+			await message.channel.send(f'```{output}```')
+		else:
+			try:
+				output = call_peer.listen_mc_reboot()
+			except Exception as e:
+				output = str(e)
+				await message.channel.send(f'```{output}```')
+			else:
+				await message.channel.send('Restart signal has been sent. Server is restarting in 10 seconds...')
+
+
 
 	elif message.content == ("!soup help"):
 		await message.author.send(
