@@ -249,34 +249,50 @@ async def on_message(message):
 		await message.channel.send("Have fun in BC!")
 
 	elif message.content == ("!soup mc") and message.channel.id == 979855384443502642:
-		await message.channel.send("> Fetching data...")
-		try:
-			result = subprocess.Popen([f'sudo mcrcon -H {mc_host} -P {mc_dport} -p {mc_pw} {mc_command1}'], stdout=subprocess.PIPE, shell=True)
-		except Exception as e:
-			result = "mcrcon encountered an error:" + str(e)
-		else:
-			result = re.sub(r"\\n", '\n', str(result.communicate()[0]).strip())
-			result = str(re.sub(r"b\'", '', str(result))).rstrip("'")
-			result = str(re.sub(r'\\x1b\[0m', '', str(result)))
 
-		await message.channel.send(f'```{result}```')
+		raw_ping = subprocess.Popen([f'sudo fping -t100 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
+		raw_ping.wait()
+
+		if 'alive' in str(raw_ping.communicate()[0]):
+
+			await message.channel.send("> Fetching data...")
+			try:
+				result = subprocess.Popen([f'sudo mcrcon -H {mc_host} -P {mc_dport} -p {mc_pw} {mc_command1}'], stdout=subprocess.PIPE, shell=True)
+			except Exception as e:
+				result = "mcrcon encountered an error:" + str(e)
+			else:
+				result = re.sub(r"\\n", '\n', str(result.communicate()[0]).strip())
+				result = str(re.sub(r"b\'", '', str(result))).rstrip("'")
+				result = str(re.sub(r'\\x1b\[0m', '', str(result)))
+
+			await message.channel.send(f'```{result}```')
+
+		else:
+			await message.channel.send('> Remote host unreachable. Please contact my administrator.')
 
 	elif message.content == ("!soup restart-mc") and message.channel.id == 979855384443502642 and (message.author.id == admin_id or message.author.id == guest_id):
-		await message.channel.send("> Sending restart signal...")
-		try:
-			call_peer = xmlrpc.client.ServerProxy(server_url)
-		except Exception as e:
-			output = str(e)
-			await message.channel.send(f'```{output}```')
-		else:
+
+		raw_ping = subprocess.Popen([f'sudo fping -t100 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
+		raw_ping.wait()
+                
+		if 'alive' in str(raw_ping.communicate()[0]):
+		
+			await message.channel.send("> Sending restart signal...")
 			try:
-				output = call_peer.listen_mc_reboot()
+				call_peer = xmlrpc.client.ServerProxy(server_url)
 			except Exception as e:
 				output = str(e)
 				await message.channel.send(f'```{output}```')
 			else:
-				await message.channel.send('Restart signal has been sent. Server is restarting in 10 seconds...')
-
+				try:
+					output = call_peer.listen_mc_reboot()
+				except Exception as e:
+					output = str(e)
+					await message.channel.send(f'```{output}```')
+				else:
+					await message.channel.send('Restart signal has been sent. Server is restarting in 10 seconds...')
+		else:
+			await message.channel.send('> Remote host unreachable. Please contact my administrator.')
 
 
 	elif message.content == ("!soup help"):
