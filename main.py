@@ -292,7 +292,7 @@ async def on_message(message):
 				else:
 					await message.channel.send('Restart signal has been sent. Server is restarting in 10 seconds...')
 		else:
-			await message.channel.send('> Remote host unreachable. Please contact my administrator.')
+			await message.channel.send('> Minecraft server unreachable...')
 
 
 	elif message.content == ("!soup help"):
