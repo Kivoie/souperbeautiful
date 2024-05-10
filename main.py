@@ -256,6 +256,8 @@ async def on_message(message):
 		if 'alive' in str(raw_ping.communicate()[0]):
 
 			await message.channel.send("> Fetching data...")
+
+
 			try:
 				result = subprocess.Popen([f'sudo mcrcon -H {mc_host} -P {mc_dport} -p {mc_pw} {mc_command1}'], stdout=subprocess.PIPE, shell=True)
 			except Exception as e:
@@ -265,10 +267,21 @@ async def on_message(message):
 				result = str(re.sub(r"b\'", '', str(result))).rstrip("'")
 				result = str(re.sub(r'\\x1b\[0m', '', str(result)))
 
+			try:
+				call_peer = xmlrpc.client.ServerProxy(server_url)
+
+			except Exception as e:
+				result = result + str(e)
+			else:
+				try:
+					result = result + str(call_peer.listen_system_stats())
+				except Exception as e:
+					result = result + str(e)
+
 			await message.channel.send(f'```{result}```')
 
 		else:
-			await message.channel.send('> Remote host unreachable. Please contact my administrator.')
+			await message.channel.send('> Minecraft server unreachable...')
 
 	elif message.content == ("!soup restart-mc") and message.channel.id == 979855384443502642 and (message.author.id == admin_id or message.author.id == guest_id):
 
