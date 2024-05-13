@@ -8,6 +8,7 @@ from time import sleep
 def get_data():
     web_url = 'https://gamepress.gg/arknights/database/operator-release-dates-and-how-obtain'	#hard coded the URL
     tempfile = '/home/ubuntu/Documents/souperbeautiful/ak.txt'
+    tempfile2 = '/home/ubuntu/Documents/souperbeautiful/ak-simple.txt'
     
     try:
         response = requests.get(web_url)	#attempt to connect to the web page
@@ -35,16 +36,25 @@ def get_data():
     
     count = 0						#counter for counting the number entries
     output_table_tbd = []					#initialize an array to store all the results later
+    output_table_mobile = []
     for i in range (0, len(operator_times_na)):		#iterate through all the operators listed in the table
     
         if str(operator_times_na[i].text).strip() == "":		#there is a trailing character (space or CRLF, I can't tell). strip it to make it easier to parse
-            if str(operator_names[i].text).strip() == 'Tulip' or str(operator_names[i].text).strip() == 'Reserve Operator - Defender' or 'Vector - APRIL FOOLS!' in str(operator_names[i].text).strip() or str(operator_names[i].text).strip() == 'Ashlock':
-                continue	#just skip these 4 operators because there is some missing information from the editor
+            if str(operator_names[i].text).strip() == 'Tulip' \
+		or str(operator_names[i].text).strip() == 'Reserve Operator - Defender' \
+		or 'Vector - APRIL FOOLS!' in str(operator_names[i].text).strip() \
+		or str(operator_names[i].text).strip() == 'Ashlock' \
+		or str(operator_names[i].text).strip() == 'U-Official':
+
+                continue	#just skip these operators because there is some missing information from the editor
             else:
     
                 #add the new entries to the table. the regex below is to remove duplicate words because "headhunting headhunting" appears in the html.
                 new_entry = [(count + 1 + 5), operator_names[i].text, str(re.sub(r'\b(\w+)\b(?=.*\b\1\b)', '', operator_obtain[i].text.replace("\n", " "))).strip(), operator_times_cn[i].text.strip(), operator_times_na[i].text.strip()]
                 output_table_tbd.append(new_entry)
+
+                new_entry2 = [(count + 1), operator_names[i].text]
+                output_table_mobile.append(new_entry2)
                 
                 count += 1
     
@@ -84,7 +94,14 @@ def get_data():
 
         output_file.write(f"Dan's script: 'ak_operators.py' executed on {timestamp}\n")
         output_file.write(tabulate(combined_array, headers=['#', 'Operator', 'Acquisition', 'CN Release', 'NA Release']))
-    
-    sleep(2)
 
+
+    print(output_table_mobile)
+
+    with open(tempfile2, "w+") as output_file:
+        output_file.write(f"Mobile version:\n")
+        output_file.write(tabulate(output_table_mobile, headers=['#', 'Operator']))
+
+
+    sleep(2)
 

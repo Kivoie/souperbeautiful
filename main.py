@@ -48,7 +48,11 @@ async def schedule_ak_chars():
 				await channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
 				await channel.send("Upload complete! Click Expand to see more (mobile support coming soon)")
 	
-				# clear the file
+				# send the mobile version and clear the files
+				with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
+					await message.channel.send("```\n" + str(tempfile.read()) + "\n```")
+					tempfile.write('')
+
 				with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
 					tempfile.write('')
 			await asyncio.sleep(60)
@@ -240,8 +244,12 @@ async def on_message(message):
 		await message.channel.send("> Fetching data...")
 		ak_operators.get_data()
 		await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
-		await message.channel.send("Upload complete! Click Expand to see more (mobile support coming soon)")
-		
+		await message.channel.send("Upload complete! Click Expand to see more. Mobile version below.")
+
+		with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
+			await message.channel.send("```\n" + str(tempfile.read()) + "\n```")
+			tempfile.write('')
+			
 		with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
 			tempfile.write('')
 
