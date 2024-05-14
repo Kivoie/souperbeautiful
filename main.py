@@ -46,7 +46,7 @@ async def schedule_ak_chars():
 				await channel.send("> Fetching data...")
 				ak_operators.get_data()		# Fetches, scrapes, and parses the data from an online blog
 				await channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
-				await channel.send("Upload complete! Click Expand to see more (mobile support coming soon)")
+				await channel.send("Upload complete! Click Expand to see more. Mobile version below.")
 	
 				# send the mobile version and clear the files
 				with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
