@@ -50,7 +50,7 @@ async def schedule_ak_chars():
 	
 				# send the mobile version and clear the files
 				with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
-					await message.channel.send("```\n" + str(tempfile.read()) + "\n```")
+					await channel.send("```\n" + str(tempfile.read()) + "\n```")
 					tempfile.write('')
 
 				with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
