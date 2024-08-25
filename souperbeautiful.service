@@ -1,0 +1,16 @@
+[Unit]
+Description=Souperbeautiful Discord bot
+
+[Service]
+User=ubuntu
+#Code to execute
+#Can be the path to an executable or code itself
+WorkingDirectory=<enter_path_here>
+ExecStart=<enter_shell_script_here>
+Type=simple
+TimeoutStopSec=10
+Restart=no
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
