@@ -18,6 +18,7 @@ token = os.getenv('SOUPER_DISCORD_TOKEN')	#Load the discord token value from the
 guild = os.getenv('SOUPER_DISCORD_GUILD')	#Load the guild name from the .env file
 admin_id = int(os.getenv('ADMIN_USER_ID'))
 guest_id = int(os.getenv('GUEST_USER_ID'))
+guest_id2 = int(os.getenv('GUEST_USER_ID2'))
 mc_host = str(os.getenv('MC_HOST'))
 mc_dport = os.getenv('MC_DPORT')
 mc_pw = str(os.getenv('MC_PW'))
@@ -258,7 +259,7 @@ async def on_message(message):
 
 	elif message.content == ("!soup mc") and message.channel.id == 979855384443502642:
 
-		raw_ping = subprocess.Popen([f'sudo fping -t100 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
+		raw_ping = subprocess.Popen([f'fping -t100 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
 		raw_ping.wait()
 
 		if 'alive' in str(raw_ping.communicate()[0]):
@@ -267,7 +268,7 @@ async def on_message(message):
 
 
 			try:
-				result = subprocess.Popen([f'sudo mcrcon -H {mc_host} -P {mc_dport} -p {mc_pw} {mc_command1}'], stdout=subprocess.PIPE, shell=True)
+				result = subprocess.Popen([f'mcrcon -H {mc_host} -P {mc_dport} -p {mc_pw} {mc_command1}'], stdout=subprocess.PIPE, shell=True)
 			except Exception as e:
 				result = "mcrcon encountered an error:" + str(e)
 			else:
@@ -291,13 +292,13 @@ async def on_message(message):
 		else:
 			await message.channel.send('> Minecraft server unreachable...')
 
-	elif message.content == ("!soup restart-mc") and message.channel.id == 979855384443502642 and (message.author.id == admin_id or message.author.id == guest_id):
+	elif message.content == ("!soup restart-mc") and message.channel.id == 979855384443502642 and (message.author.id == admin_id or message.author.id == guest_id or message.author.id == guest_id2):
 
-		raw_ping = subprocess.Popen([f'sudo fping -t100 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
+		raw_ping = subprocess.Popen([f'fping -t100 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
 		raw_ping.wait()
-                
+
 		if 'alive' in str(raw_ping.communicate()[0]):
-		
+
 			await message.channel.send("> Sending restart signal...")
 			try:
 				call_peer = xmlrpc.client.ServerProxy(server_url)
