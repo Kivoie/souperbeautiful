@@ -62,7 +62,7 @@ def get_data():
         #combined_array.append((banner_names[i], release_date_cn[i], operator_names[i]))
     combined_output = ''
     for i in range(len(banner_names)):
-        combined_output += f"{banner_names[i]}\n{release_date_cn[i]}\n"
+        combined_output += f"**{banner_names[i]}**\n{release_date_cn[i]}\n"
         for j in range(len(operator_names[i])):
             combined_output += f"{operator_names[i][j]}\n"
         combined_output += "\n"
