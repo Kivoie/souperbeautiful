@@ -9,7 +9,7 @@ import DannyVuonglab1q5 #import from my custom lib
 #import math				#import math methods
 from bs4 import BeautifulSoup	#import string parser
 import subprocess
-import ak_operators
+import ak_operators, ak_operators_new
 import xmlrpc.client
 #parserny = DannyVuonglab1q5.soupny()
 
@@ -35,6 +35,7 @@ intents.presences = False
 client = discord.Client(intents=intents)
 
 # schedule to send list of ak chars every monday at 10:00
+'''
 async def schedule_ak_chars():
 	await client.wait_until_ready()		#wait until the bot is fully initialized before continuing
 
@@ -63,7 +64,6 @@ async def schedule_ak_chars():
 		finally:
 			print(f"Exception caught in schedule_ak_chars()\n{e}")
 
-'''
 async def news_hna(channel):
 	await client.wait_until_ready()
 	await channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
@@ -180,29 +180,6 @@ async def on_message(message):
 				break
 		await message.channel.send("Those are the top headlines for today! Find more at " + "<" + url + ">")
 
-	elif message.content == ("!soup news-hna"):
-		await message.channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
-		article = 1		#start counter at 1
-		url = 'https://hikarinoakari.com/'      #domain https://hikarinoakariost.info deprecated? Anyways, using new domain
-
-		r = requests.get(url)	#get method to get url
-		r_html = r.text		    #convert html into text
-
-		soup = BeautifulSoup(r_html)	#parser to parse all the text
-
-		for title in soup.find_all('h3'):		#print out all the strings starting with the h3 tag
-			try:
-				await message.channel.send(str(article) + "........[song] " + "**" + title.find('a').text + "**")	#print the article count number followed by the name of the headline
-				#print(article)
-			except AttributeError:
-				print("ERROR: AttributeError")
-				break
-			article += 1		#increment counter by 1 for every loop
-			if article == 16:
-				article = 1
-				break
-		await message.channel.send("Those are the top releases for today! Find more at " + "<" + url + ">")
-
 	elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
 
@@ -243,23 +220,33 @@ async def on_message(message):
 
 	elif message.content == ("!soup ak-chars"):
 		await message.channel.send("> Fetching data...")
-		ak_operators.get_data()
-		await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
-		await message.channel.send("Upload complete! Click Expand to see more. Mobile version below.")
+		try:
+			ak_text = ak_operators_new.get_data()
+		except Exception as e:
+			message.channel.send(f"Exception caught in ak_operators_new\n```{e}```")
+		else:
+			embedVar = discord.Embed(title="Upcoming Arknights Banners", description="CN Servers", color=0xffd34f)
+			embedVar.add_field(name="", value=f"{ak_text}", inline=False)
+			await message.channel.send(embed=embedVar)
+			
+			#await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
+			#await message.channel.send("Upload complete! Click Expand to see more. Mobile version below.")
 
+		'''
 		with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
 			await message.channel.send("```\n" + str(tempfile.read()) + "\n```")
 			tempfile.write('')
 			
 		with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
 			tempfile.write('')
+		'''
 
 	elif message.content == ("!soup bc"):
 		await message.channel.send("Have fun in BC!")
 
 	elif message.content == ("!soup mc") and message.channel.id == 979855384443502642:
 
-		raw_ping = subprocess.Popen([f'fping -t100 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
+		raw_ping = subprocess.Popen([f'fping -t2000 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
 		raw_ping.wait()
 
 		if 'alive' in str(raw_ping.communicate()[0]):
@@ -281,20 +268,27 @@ async def on_message(message):
 
 			except Exception as e:
 				result = result + str(e)
+				embedVar = discord.Embed(title="Minecraft Server Status", description="There was an error.", color=0x870000)
 			else:
 				try:
 					result = result + str(call_peer.listen_system_stats())
 				except Exception as e:
 					result = result + str(e)
+				else:
+					timestamp = str(datetime.now().strftime("%Y%m%d-%H:%M:%S"))
+					embedVar = discord.Embed(title="Minecraft Server Status", description=f"Retrieved {timestamp}", color=0xffd34f)
 
-			await message.channel.send(f'```{result}```')
+			embedVar.add_field(name="", value=f"```{result}```", inline=False)
+			await message.channel.send(embed=embedVar)
 
 		else:
-			await message.channel.send('> Minecraft server unreachable...')
+			embedVar = discord.Embed(title="Minecraft Server Status", description="There was an error.", color=0x870000)
+			embedVar.add_field(name="", value=f"Minecraft server unreachable!", inline=False)
+			await message.channel.send(embed=embedVar)
 
 	elif message.content == ("!soup restart-mc") and message.channel.id == 979855384443502642 and (message.author.id == admin_id or message.author.id == guest_id or message.author.id == guest_id2):
 
-		raw_ping = subprocess.Popen([f'fping -t100 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
+		raw_ping = subprocess.Popen([f'fping -t2000 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
 		raw_ping.wait()
 
 		if 'alive' in str(raw_ping.communicate()[0]):
@@ -312,9 +306,14 @@ async def on_message(message):
 					output = str(e)
 					await message.channel.send(f'```{output}```')
 				else:
-					await message.channel.send('Restart signal has been sent. Server is restarting in 10 seconds...')
+					timestamp = str(datetime.now().strftime("%Y%m%d-%H:%M:%S"))
+					embedVar = discord.Embed(title="Minecraft Server Restart", description=f"Restarted {timestamp}", color=0xffd34f)
+					embedVar.add_field(name="", value=f"Restart signal has been sent. Server is restarting in 10 seconds...", inline=False)
+					await message.channel.send(embed=embedVar)
 		else:
-			await message.channel.send('> Minecraft server unreachable...')
+			embedVar = discord.Embed(title="Minecraft Server Restart", description="There was an error.", color=0x870000)
+			embedVar.add_field(name="", value=f"Minecraft server unreachable!", inline=False)
+			await message.channel.send(embed=embedVar)
 
 
 	elif message.content == ("!soup help"):
