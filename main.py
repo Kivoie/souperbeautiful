@@ -225,9 +225,12 @@ async def on_message(message):
 		except Exception as e:
 			message.channel.send(f"Exception caught in ak_operators_new\n```{e}```")
 		else:
-			embedVar = discord.Embed(title="Upcoming Arknights Banners", description="CN Servers", color=0xffd34f)
-			embedVar.add_field(name="", value=f"{ak_text}", inline=False)
-			await message.channel.send(embed=embedVar)
+			timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+			ak_chars_embed = discord.Embed(title="Upcoming Arknights Banners", description="", color=0xffd34f)
+			ak_chars_embed.set_thumbnail(url="https://i.imgur.com/ypKd7gp.png")
+			ak_chars_embed.add_field(name="", value=f"{ak_text}", inline=False)
+			ak_chars_embed.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp}")
+			await message.channel.send(embed=ak_chars_embed)
 			
 			#await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
 			#await message.channel.send("Upload complete! Click Expand to see more. Mobile version below.")
@@ -268,23 +271,29 @@ async def on_message(message):
 
 			except Exception as e:
 				result = result + str(e)
-				embedVar = discord.Embed(title="Minecraft Server Status", description="There was an error.", color=0x870000)
+				mcstatus = discord.Embed(title="Minecraft Server Status", description="There was an error.", color=0x870000)
 			else:
 				try:
 					result = result + str(call_peer.listen_system_stats())
 				except Exception as e:
 					result = result + str(e)
+					mcstatus = discord.Embed(title="Minecraft Server Status", description="There was an error.", color=0x870000)
 				else:
-					timestamp = str(datetime.now().strftime("%Y%m%d-%H:%M:%S"))
-					embedVar = discord.Embed(title="Minecraft Server Status", description=f"Retrieved {timestamp}", color=0xffd34f)
+					mcstatus = discord.Embed(title="Minecraft Server Status", description="", color=0xffd34f)
 
-			embedVar.add_field(name="", value=f"```{result}```", inline=False)
-			await message.channel.send(embed=embedVar)
+			timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+			mcstatus.set_thumbnail(url="https://i.imgur.com/vdB3U0w.png")
+			mcstatus.add_field(name="", value=f"```{result}```", inline=False)
+			mcstatus.set_footer(text=f"Danny's mcrpc script, retrieved {timestamp}")
+			await message.channel.send(embed=mcstatus)
 
 		else:
-			embedVar = discord.Embed(title="Minecraft Server Status", description="There was an error.", color=0x870000)
-			embedVar.add_field(name="", value=f"Minecraft server unreachable!", inline=False)
-			await message.channel.send(embed=embedVar)
+			timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+			mcstatus = discord.Embed(title="Minecraft Server Status", description="", color=0x870000)
+			mcstatus.set_thumbnail(url="https://i.imgur.com/vdB3U0w.png")
+			mcstatus.add_field(name="There was an error.", value="Minecraft server unreachable!", inline=False)
+			mcstatus.set_footer(text=f"Danny's mcrpc script, retrieved {timestamp}")
+			await message.channel.send(embed=mcstatus)
 
 	elif message.content == ("!soup restart-mc") and message.channel.id == 979855384443502642 and (message.author.id == admin_id or message.author.id == guest_id or message.author.id == guest_id2):
 
@@ -306,14 +315,19 @@ async def on_message(message):
 					output = str(e)
 					await message.channel.send(f'```{output}```')
 				else:
-					timestamp = str(datetime.now().strftime("%Y%m%d-%H:%M:%S"))
-					embedVar = discord.Embed(title="Minecraft Server Restart", description=f"Restarted {timestamp}", color=0xffd34f)
-					embedVar.add_field(name="", value=f"Restart signal has been sent. Server is restarting in 10 seconds...", inline=False)
-					await message.channel.send(embed=embedVar)
+					timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+					restartmc = discord.Embed(title="Minecraft Server Restart", description="", color=0xffd34f)
+					restartmc.set_thumbnail(url="https://i.imgur.com/vdB3U0w.png")
+					restartmc.add_field(name="Restart signal has been sent.", value="Server is restarting in 10 seconds...", inline=False)
+					restartmc.set_footer(text=f"Danny's restartmc script, retrieved {timestamp}")
+					await message.channel.send(embed=restartmc)
 		else:
-			embedVar = discord.Embed(title="Minecraft Server Restart", description="There was an error.", color=0x870000)
-			embedVar.add_field(name="", value=f"Minecraft server unreachable!", inline=False)
-			await message.channel.send(embed=embedVar)
+			timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+			restartmc = discord.Embed(title="Minecraft Server Restart", description="There was an error.", color=0x870000)
+			restartmc.set_thumbnail(url="https://i.imgur.com/vdB3U0w.png")
+			restartmc.add_field(name="Minecraft server unreachable!", value="", inline=False)
+			restartmc.set_footer(text=f"Danny's restartmc script, retrieved {timestamp}")
+			await message.channel.send(embed=restartmc)
 
 
 	elif message.content == ("!soup help"):
@@ -322,7 +336,6 @@ async def on_message(message):
 		"```\n"
 		"!soup news-ny			- Receiving the first 15 headlines in NYTimes\n"
 		"!soup news-tom		   - Receiving the first 15 headlines in Toms Hardware\n"
-		"!soup news-hna		   - Get the first 15 headlines from Hikari no Akari OST\n"
 		"!soup news-slash	     - Get the first 15 headlines from SlashDot news\n"
 		"!soup ak-chars		   - List upcoming Arknights operators (NA)\n"
 		"!soup hello			  - Talk with a robot\n"
