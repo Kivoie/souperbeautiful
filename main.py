@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup	#import string parser
 import subprocess
 import ak_operators, ak_operators_new
 import xmlrpc.client
-import tabulate
+from tabulate import tabulate
 
 load_dotenv()
 token = os.getenv('SOUPER_DISCORD_TOKEN')	#Load the discord token value from the .env file
@@ -185,7 +185,7 @@ async def on_message(message):
 	#			break
 	#	await message.channel.send("Those are the top headlines for today! Find more at " + "<" + url + ">")
 
-    elif message.content == ("!soup hello"):
+	elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
 
 	elif message.content == ("!soup eat") and message.author.id == admin_id:
@@ -320,23 +320,24 @@ async def on_message(message):
 
 	elif message.content == ("!soup help"):
 
-		help_headers = ['Command', 'Description', 'Protected']
-		help_data = [
-				['!soup hello', 'Talk with a robot', 'No'],
-				['!soup ak-chars', 'List upcoming Arknights banners and operators (CN)', 'No'],
-				['!soup mc', 'Get Minecraft server status', 'No'],
-				['!soup restart-mc', 'Restart the Minecraft server immediately', 'Yes'],
-				['!soup <eat|spill>', 'Shutdown the bot', 'Yes'],
-				['!soup bc', 'Specifically for David', 'No'],
-				['!soup help', 'Display this help tool', 'No']
-			]
+		#help_headers = ['Command', 'Description', 'Protected']
+		#help_data = [
+		#		['!soup hello', 'Talk with a robot', 'No'],
+		#		['!soup ak-chars', 'List upcoming Arknights banners and operators (CN)', 'No'],
+		#		['!soup mc', 'Get Minecraft server status', 'No'],
+		#		['!soup restart-mc', 'Restart the Minecraft server immediately', 'Yes'],
+		#		['!soup <eat|spill>', 'Shutdown the bot', 'Yes'],
+		#		['!soup bc', 'Specifically for David', 'No'],
+		#		['!soup help', 'Display this help tool', 'No']
+		#	]
 
-		helpmessage = tabulate(help_data, headers=help_headers, tablefmt='simple')
+		#helpmessage = tabulate(help_data, headers=help_headers, tablefmt='simple')
+		helpmessage = "!soup hello\n!soup ak-chars\n!soup mc\n!soup restart-mc\n!soup bc\n!soup help"
 
 		timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
-		helptext = discord.Embed(title="Souperbeautiful Discord Bot", description="Help", color=0xffd34f)
+		helptext = discord.Embed(title="Souperbeautiful Discord Bot", description="Bot commands", color=0xffd34f)
 		helptext.set_thumbnail(url="https://i.imgur.com/7NehTAD.png")
-		helptext.add_field(name="", value=f"```{helpmessage}```", inline=False)
+		helptext.add_field(name="", value=f"```{helpmessage}```", inline=True)
 		helptext.set_footer(text=f"Retrieved {timestamp}")
 		await message.author.send(embed=helptext)
 
