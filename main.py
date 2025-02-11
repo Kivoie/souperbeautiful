@@ -6,12 +6,11 @@ import asyncio		#asynchronous concurrency
 import discord          #import discord lib
 from dotenv import load_dotenv
 import DannyVuonglab1q5 #import from my custom lib
-#import math				#import math methods
 from bs4 import BeautifulSoup	#import string parser
 import subprocess
 import ak_operators, ak_operators_new
 import xmlrpc.client
-#parserny = DannyVuonglab1q5.soupny()
+import tabulate
 
 load_dotenv()
 token = os.getenv('SOUPER_DISCORD_TOKEN')	#Load the discord token value from the .env file
@@ -27,7 +26,6 @@ server_ip = os.getenv('RPC_HOST')
 server_port = os.getenv('RPC_PORT')
 server_url = "http://" + str(server_ip) + ":" + str(server_port)
 
-
 intents = discord.Intents.default()
 intents.typing = False
 intents.presences = False
@@ -35,7 +33,7 @@ intents.presences = False
 client = discord.Client(intents=intents)
 
 # schedule to send list of ak chars every monday at 10:00
-'''
+
 async def schedule_ak_chars():
 	await client.wait_until_ready()		#wait until the bot is fully initialized before continuing
 
@@ -44,19 +42,26 @@ async def schedule_ak_chars():
 		while not client.is_closed():
 			current_time = datetime.now()
 			if current_time.weekday() == 0 and current_time.hour == 10 and current_time.minute == 0:
-				await channel.send("**Automated Task** Scheduled for Monday 10:00 EST, executed on `" + str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + "`")
 				await channel.send("> Fetching data...")
-				ak_operators.get_data()		# Fetches, scrapes, and parses the data from an online blog
-				await channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
-				await channel.send("Upload complete! Click Expand to see more. Mobile version below.")
+				ak_operators_new.get_data()		# Fetches, scrapes, and parses the data from an online blog
+				
+				timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+				ak_chars_embed_auto = discord.Embed(title="Upcoming Arknights Banners", description="Every Monday at 10:00 EST!", color=0xffd34f)
+				ak_chars_embed_auto.set_thumbnail(url="https://i.imgur.com/ypKd7gp.png")
+				ak_chars_embed_auto.add_field(name="", value=f"{ak_text}", inline=False)
+				ak_chars_embed_auto.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp}")
+				await message.channel.send(embed=ak_chars_embed_auto)
+				
+				#await channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
+				#await channel.send("Upload complete! Click Expand to see more. Mobile version below.")
 	
 				# send the mobile version and clear the files
-				with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
-					await channel.send("```\n" + str(tempfile.read()) + "\n```")
-					tempfile.write('')
+				#with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
+					#await channel.send("```\n" + str(tempfile.read()) + "\n```")
+					#tempfile.write('')
 
-				with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
-					tempfile.write('')
+				#with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
+					#tempfile.write('')
 			await asyncio.sleep(60)
 	except Exception as e:
 		try:
@@ -64,51 +69,52 @@ async def schedule_ak_chars():
 		finally:
 			print(f"Exception caught in schedule_ak_chars()\n{e}")
 
-async def news_hna(channel):
-	await client.wait_until_ready()
-	await channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
-	article = 1		#start counter at 1
-	url = 'https://hikarinoakari.com/'      #domain https://hikarinoakariost.info deprecated? Anyways, using new domain
 
-	r = requests.get(url)	#get method to get url
-	r_html = r.text		    #convert html into text
+#async def news_hna(channel):
+#	await client.wait_until_ready()
+#	await channel.send("Hikari no Akari OST 音楽 [HNA Updates]")
+#	article = 1		#start counter at 1
+#	url = 'https://hikarinoakari.com/'      #domain https://hikarinoakariost.info deprecated? Anyways, using new domain
+#
+#	r = requests.get(url)	#get method to get url
+#	r_html = r.text		    #convert html into text
+#
+#	soup = BeautifulSoup(r_html)	#parser to parse all the text
+#
+#	for title in soup.find_all('h3'):		#print out all the strings starting with the h3 tag
+#		try:
+#			await channel.send(str(article) + ") [song] " + "**" + title.find('a').text + "**")	#print the article count number followed by the name of the headline
+#			#print(article)
+#		except AttributeError:
+#			print("ERROR: AttributeError")
+#			break
+#		article += 1		#increment counter by 1 for every loop
+#		if article == 16:
+#			article = 1
+#			break
+#	await channel.send("Those are the top releases for today! Find more at " + "<" + url + ">")
+#
+#async def schedule_news_hna():
+#	await client.wait_until_ready()
+#
+#	channel = client.get_channel(652711785023143936)
+#	try:
+#		while not client.is_closed():
+#			current_time = datetime.now()
+#			if (current_time.weekday() == 0 and current_time.hour == 10 and current_time.minute == 1) \
+#			or (current_time.weekday() == 2 and current_time.hour == 10 and current_time.minute == 1) \
+#			or (current_time.weekday() == 4 and current_time.hour == 13 and current_time.minute == 11):
+#				try:
+#					await news_hna(channel)
+#				except Exception as e:
+#					print(f"Exception caught within news_hna()\n{e}")
+#					channel.send("Exception caught within news_hna()\n```" + str(e) + "```")
+#			await asyncio.sleep(60)
+#	except Exception as e:
+#		print(f"Exception caught in schedule_news_hna()\n{e}")
+#		await channel.send("Exception caught in schedule_news_hna()\n```" + str(e) + "```")
 
-	soup = BeautifulSoup(r_html)	#parser to parse all the text
 
-	for title in soup.find_all('h3'):		#print out all the strings starting with the h3 tag
-		try:
-			await channel.send(str(article) + ") [song] " + "**" + title.find('a').text + "**")	#print the article count number followed by the name of the headline
-			#print(article)
-		except AttributeError:
-			print("ERROR: AttributeError")
-			break
-		article += 1		#increment counter by 1 for every loop
-		if article == 16:
-			article = 1
-			break
-	await channel.send("Those are the top releases for today! Find more at " + "<" + url + ">")
-
-async def schedule_news_hna():
-	await client.wait_until_ready()
-
-	channel = client.get_channel(652711785023143936)
-	try:
-		while not client.is_closed():
-			current_time = datetime.now()
-			if (current_time.weekday() == 0 and current_time.hour == 10 and current_time.minute == 1) \
-			or (current_time.weekday() == 2 and current_time.hour == 10 and current_time.minute == 1) \
-			or (current_time.weekday() == 4 and current_time.hour == 13 and current_time.minute == 11):
-				try:
-					await news_hna(channel)
-				except Exception as e:
-					print(f"Exception caught within news_hna()\n{e}")
-					channel.send("Exception caught within news_hna()\n```" + str(e) + "```")
-			await asyncio.sleep(60)
-	except Exception as e:
-		print(f"Exception caught in schedule_news_hna()\n{e}")
-		await channel.send("Exception caught in schedule_news_hna()\n```" + str(e) + "```")
-'''
-			
 
 @client.event
 async def on_ready():	#The following scripts in on_ready() will only run everytime the bot comes online
@@ -117,15 +123,13 @@ async def on_ready():	#The following scripts in on_ready() will only run everyti
 				break
 
 	#GUILD = discord.utils.get(client.guilds, name=guild)
-	print("[debug] Souperbeautiful started at system time " + (str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + ". All systems go!!\n(Press CTRL + C to terminate script at any time. There will be a delay before bot logs off."))
+	print("[debug] Souperbeautiful started at system time " + (str(datetime.now().strftime("%Y%m%d-%H:%M:%S")) + ". All systems go!!"))
 	#print("{client.user} is online in {guild.name} (id: {guild.id}) at system time " + str(datetime.now()) + ".")
 	#print(GUILD)
 	#members = '\n - '.join([member.name for member in guild.members])
 	#print(f'Guild Members:\n - {members}')
 
-	print("[debug] Initializing loops...")
 	client.loop.create_task(schedule_ak_chars())	#init ak loop task
-	#client.loop.create_task(schedule_news_hna())	#init hna loop task
 
 	print("[debug] Updating activity name...")
 	await client.change_presence(activity=discord.Game(name='instead of working'))
@@ -134,60 +138,55 @@ async def on_ready():	#The following scripts in on_ready() will only run everyti
 async def on_message(message):
 	if message.author == client.user:
 		return
-	elif message.content == ("!soup news-ny"):
-		await message.channel.send("News Articles ニュース記事 [New York Times]")
-		article = 1		#start counter at 1
-		url = 'https://www.nytimes.com/ca/'
 
-		r = requests.get(url)	#get method to get url
-		r_html = r.text		    #convert html into text
+	#elif message.content == ("!soup news-ny"):
+	#	await message.channel.send("News Articles ニュース記事 [New York Times]")
+	#	article = 1		#start counter at 1
+	#	url = 'https://www.nytimes.com/ca/'
+    #
+	#	r = requests.get(url)	#get method to get url
+	#	r_html = r.text		    #convert html into text
+    #
+	#	soup = BeautifulSoup(r_html)	#parser to parse all the text
+    #
+	#	for title in soup.find_all('article'):		#print out all the strings starting with the h2 tag
+	#		try:
+	#			await message.channel.send(str(article) + "........[article] " + "**" + title.find('h1').text + "**")	#print the article count number followed by the name of the headline
+	#			#print(article)
+	#		except AttributeError:
+	#			print("ERROR: AttributeError")
+	#			break
+	#		article += 1		#increment counter by 1 for every loop
+	#		if article == 16:
+	#			article = 1
+	#			break
+	#	await message.channel.send("These are the top headlines for today! Find them at "+ "<" + url + ">")
+    #
+	#elif message.content == ("!soup news-tom"):
+	#	await message.channel.send("News Articles ニュース記事 [Tom's Hardware")
+	#	article = 1		#start counter at 1
+	#	url = 'https://www.tomshardware.com/'
+    #
+	#	r = requests.get(url)	#get method to get url
+	#	r_html = r.text		    #convert html into text
+    #
+	#	soup = BeautifulSoup(r_html)	#parser to parse all the text
+    #
+	#	for title in soup.find_all('figcaption'):		#print out all the strings referenced by article-name class
+	#		try:
+	#			await message.channel.send(str(article) + "........[article] "  + "**" + title.find(class_="article-name").text + "**" )	#print the article count number followed by the name of the headline
+	#			#print(article)
+	#		except AttributeError:
+	#			print("ERROR: AttributeError")
+	#			break
+	#		article += 1		#increment counter by 1 for every loop
+	#		if article == 16:
+	#			article = 1
+	#			break
+	#	await message.channel.send("Those are the top headlines for today! Find more at " + "<" + url + ">")
 
-		soup = BeautifulSoup(r_html)	#parser to parse all the text
-
-		for title in soup.find_all('article'):		#print out all the strings starting with the h2 tag
-			try:
-				await message.channel.send(str(article) + "........[article] " + "**" + title.find('h1').text + "**")	#print the article count number followed by the name of the headline
-				#print(article)
-			except AttributeError:
-				print("ERROR: AttributeError")
-				break
-			article += 1		#increment counter by 1 for every loop
-			if article == 16:
-				article = 1
-				break
-		await message.channel.send("These are the top headlines for today! Find them at "+ "<" + url + ">")
-
-	elif message.content == ("!soup news-tom"):
-		await message.channel.send("News Articles ニュース記事 [Tom's Hardware")
-		article = 1		#start counter at 1
-		url = 'https://www.tomshardware.com/'
-
-		r = requests.get(url)	#get method to get url
-		r_html = r.text		    #convert html into text
-
-		soup = BeautifulSoup(r_html)	#parser to parse all the text
-
-		for title in soup.find_all('figcaption'):		#print out all the strings referenced by article-name class
-			try:
-				await message.channel.send(str(article) + "........[article] "  + "**" + title.find(class_="article-name").text + "**" )	#print the article count number followed by the name of the headline
-				#print(article)
-			except AttributeError:
-				print("ERROR: AttributeError")
-				break
-			article += 1		#increment counter by 1 for every loop
-			if article == 16:
-				article = 1
-				break
-		await message.channel.send("Those are the top headlines for today! Find more at " + "<" + url + ">")
-
-	elif message.content == ("!soup hello"):
+    elif message.content == ("!soup hello"):
 		await message.channel.send("Hello, souper!")
-
-	#elif message.content == ("ayy"):
-	#	await message.channel.send("lmao")
-
-	#elif message.content == ("lmao"):
-	#	await message.channel.send("ayy")
 
 	elif message.content == ("!soup eat") and message.author.id == admin_id:
 		await message.channel.send("Bye bye! じゃあまたね~")
@@ -196,20 +195,9 @@ async def on_message(message):
 		await asyncio.sleep(3)
 		await client.close()
 
-	elif message.content == ("!soup eat") and not message.author.id == admin_id:
-		await message.channel.send("You are not authorized to issue that command!")
-
 	elif message.content == ("!soup spill") and message.author.id == admin_id:
 		await message.channel.send("> **Emergency shutdown**")
 		await client.close()
-
-	elif message.content == ("!soup spill") and not message.author.id == admin_id:
-		await message.channel.send("You are not authorized to issue that command!")
-
-#	elif message.content == ("!soup refill"):
-#		await message.channel.send("> **Rebooting...**")
-#		await asyncio.sleep(3)
-#		await client.clear()
 
 #	elif message.content == ("!soup headpat"):
 #		await message.channel.send("> Uploading...")
@@ -235,14 +223,14 @@ async def on_message(message):
 			#await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
 			#await message.channel.send("Upload complete! Click Expand to see more. Mobile version below.")
 
-		'''
-		with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
-			await message.channel.send("```\n" + str(tempfile.read()) + "\n```")
-			tempfile.write('')
-			
-		with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
-			tempfile.write('')
-		'''
+
+		#with open('/home/ubuntu/Documents/souperbeautiful/ak-simple.txt', "r+") as tempfile:
+		#	await message.channel.send("```\n" + str(tempfile.read()) + "\n```")
+		#	tempfile.write('')
+		#	
+		#with open('/home/ubuntu/Documents/souperbeautiful/ak.txt', 'w+') as tempfile:
+		#	tempfile.write('')
+
 
 	elif message.content == ("!soup bc"):
 		await message.channel.send("Have fun in BC!")
@@ -331,25 +319,40 @@ async def on_message(message):
 
 
 	elif message.content == ("!soup help"):
-		await message.author.send(
-		"> **List of Commands**\n"
-		"```\n"
-		"!soup news-ny			- Receiving the first 15 headlines in NYTimes\n"
-		"!soup news-tom		   - Receiving the first 15 headlines in Toms Hardware\n"
-		"!soup news-slash	     - Get the first 15 headlines from SlashDot news\n"
-		"!soup ak-chars		   - List upcoming Arknights operators (NA)\n"
-		"!soup hello			  - Talk with a robot\n"
-		"!soup eat				- Normal shutdown\n"
-		"!soup spill			  - Emergency shutdown (immediate shutdown)\n"
-		"```"
-		)
 
-#	elif message.content == ("!soup newsapi"):
-#		url = ('https://newsapi.org/v2/top-headlines?'
-#        'country=us&'
-#        'apiKey=7f2826a87e5a4061af386613e358c664')
-#		response = requests.get(url)
-#		print(response.json())
+		help_headers = ['Command', 'Description', 'Protected']
+		help_data = [
+				['!soup hello', 'Talk with a robot', 'No'],
+				['!soup ak-chars', 'List upcoming Arknights banners and operators (CN)', 'No'],
+				['!soup mc', 'Get Minecraft server status', 'No'],
+				['!soup restart-mc', 'Restart the Minecraft server immediately', 'Yes'],
+				['!soup <eat|spill>', 'Shutdown the bot', 'Yes'],
+				['!soup bc', 'Specifically for David', 'No'],
+				['!soup help', 'Display this help tool', 'No']
+			]
+
+		helpmessage = tabulate(help_data, headers=help_headers, tablefmt='simple')
+
+		timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+		helptext = discord.Embed(title="Souperbeautiful Discord Bot", description="Help", color=0xffd34f)
+		helptext.set_thumbnail(url="https://i.imgur.com/7NehTAD.png")
+		helptext.add_field(name="", value=f"```{helpmessage}```", inline=False)
+		helptext.set_footer(text=f"Retrieved {timestamp}")
+		await message.author.send(embed=helptext)
+
+
+		#await message.author.send(
+		#"> **List of Commands**\n"
+		#"```\n"
+		#"!soup news-ny			- Receiving the first 15 headlines in NYTimes\n"
+		#"!soup news-tom		   - Receiving the first 15 headlines in Toms Hardware\n"
+		#"!soup news-slash	     - Get the first 15 headlines from SlashDot news\n"
+		#"!soup ak-chars		   - List upcoming Arknights operators (NA)\n"
+		#"!soup hello			  - Talk with a robot\n"
+		#"!soup eat				- Normal shutdown\n"
+		#"!soup spill			  - Emergency shutdown (immediate shutdown)\n"
+		#"```"
+		#)
 
 
 client.run(token)
