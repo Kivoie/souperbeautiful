@@ -5,6 +5,10 @@ As the title suggests, a Discord bot written in Python that uses the BeautifulSo
 
 ## Changelog
 
+### 02/17/2025
+- Fixed 'ak_chars' automated message
+- Added '!soup crash-mc' to view first few lines of latest crash log
+
 ### 02/10/2025
 - Cleaned up code base
 - Added Arknights banner function
