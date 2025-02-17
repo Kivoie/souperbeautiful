@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import DannyVuonglab1q5 #import from my custom lib
 from bs4 import BeautifulSoup	#import string parser
 import subprocess
-import ak_operators, ak_operators_new
+import ak_operators_new
 import xmlrpc.client
 from tabulate import tabulate
 
@@ -43,14 +43,15 @@ async def schedule_ak_chars():
 			current_time = datetime.now()
 			if current_time.weekday() == 0 and current_time.hour == 10 and current_time.minute == 0:
 				await channel.send("> Fetching data...")
-				ak_operators_new.get_data()		# Fetches, scrapes, and parses the data from an online blog
-				
-				timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+
+				ak_text = str(ak_operators_new.get_data())		# Fetches, scrapes, and parses the data from an online blog
 				ak_chars_embed_auto = discord.Embed(title="Upcoming Arknights Banners", description="Every Monday at 10:00 EST!", color=0xffd34f)
 				ak_chars_embed_auto.set_thumbnail(url="https://i.imgur.com/ypKd7gp.png")
 				ak_chars_embed_auto.add_field(name="", value=f"{ak_text}", inline=False)
+				timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
 				ak_chars_embed_auto.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp}")
-				await message.channel.send(embed=ak_chars_embed_auto)
+
+				await channel.send(embed=ak_chars_embed_auto)
 				
 				#await channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
 				#await channel.send("Upload complete! Click Expand to see more. Mobile version below.")
@@ -317,6 +318,40 @@ async def on_message(message):
 			restartmc.set_footer(text=f"Danny's restartmc script, retrieved {timestamp}")
 			await message.channel.send(embed=restartmc)
 
+	elif message.content == ("!soup crash-mc") and message.channel.id == 979855384443502642 and (message.author.id == admin_id or message.author.id == guest_id or message.author.id == guest_id2):
+
+		raw_ping = subprocess.Popen([f'fping -t2000 -r 0 {mc_host}'], stdout=subprocess.PIPE, shell=True)
+		raw_ping.wait()
+
+		if 'alive' in str(raw_ping.communicate()[0]):
+
+			await message.channel.send("> Fetching latest crash logs...")
+			try:
+				call_peer = xmlrpc.client.ServerProxy(server_url)
+			except Exception as e:
+				output = str(e)
+				await message.channel.send(f'```{output}```')
+			else:
+				try:
+					output = call_peer.find_crash_log()
+				except Exception as e:
+					output = str(e)
+					await message.channel.send(f'```{output}```')
+				else:
+					timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+					crashlogs = discord.Embed(title="Minecraft Crash Logs", description="Latest crash logs are displayed below", color=0xffd34f)
+					crashlogs.set_thumbnail(url="https://i.imgur.com/vdB3U0w.png")
+					crashlogs.add_field(name="", value=f"```{output}```", inline=False)
+					crashlogs.set_footer(text=f"Danny's crashlog script, retrieved {timestamp}")
+					await message.channel.send(embed=crashlogs)
+		else:
+			timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
+			crashlogs = discord.Embed(title="Minecraft Crash Logs", description="There was an error.", color=0x870000)
+			crashlogs.set_thumbnail(url="https://i.imgur.com/vdB3U0w.png")
+			crashlogs.add_field(name="Minecraft server unreachable!", value="", inline=False)
+			crashlogs.set_footer(text=f"Danny's crashlog script, retrieved {timestamp}")
+			await message.channel.send(embed=crashlogs)
+
 
 	elif message.content == ("!soup help"):
 
@@ -332,7 +367,7 @@ async def on_message(message):
 		#	]
 
 		#helpmessage = tabulate(help_data, headers=help_headers, tablefmt='simple')
-		helpmessage = "!soup hello\n!soup ak-chars\n!soup mc\n!soup restart-mc\n!soup bc\n!soup help"
+		helpmessage = "!soup hello\n!soup ak-chars\n!soup mc\n!soup restart-mc\n!soup crash-mc\n!soup bc\n!soup help\n"
 
 		timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
 		helptext = discord.Embed(title="Souperbeautiful Discord Bot", description="Bot commands", color=0xffd34f)
