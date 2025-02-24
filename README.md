@@ -5,6 +5,10 @@ As the title suggests, a Discord bot written in Python that uses the BeautifulSo
 
 ## Changelog
 
+### 02/24/2025
+- Fixed an issue where the output was not displaying debugs correctly
+- Removed Kernel banners to reduce the number of characters in the embed (max 4096)
+
 ### 02/17/2025
 - Fixed 'ak_chars' automated message
 - Added `!soup crash-mc` to print first few lines of latest crash log
