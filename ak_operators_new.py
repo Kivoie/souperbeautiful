@@ -35,7 +35,7 @@ def get_data():
         if div_banner:
             spans = div_banner.findAll('span')
             for span in spans:
-                if span.get_text():
+                if not 'Kernel' in str(span.get_text()):
                     banner_names.append(str(span.get_text()))
 
     for row in table.findAll('tr'):                         #search through each row in the table
