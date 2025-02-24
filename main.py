@@ -212,14 +212,17 @@ async def on_message(message):
 		try:
 			ak_text = ak_operators_new.get_data()
 		except Exception as e:
-			message.channel.send(f"Exception caught in ak_operators_new\n```{e}```")
+			await message.channel.send(f"Exception caught in ak_operators_new\n```{e}```")
 		else:
 			timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
-			ak_chars_embed = discord.Embed(title="Upcoming Arknights Banners", description="", color=0xffd34f)
+			ak_chars_embed = discord.Embed(title="Upcoming Arknights Banners", description=f"{ak_text}", color=0xffd34f)
 			ak_chars_embed.set_thumbnail(url="https://i.imgur.com/ypKd7gp.png")
-			ak_chars_embed.add_field(name="", value=f"{ak_text}", inline=False)
+			#ak_chars_embed.add_field(name="", value=f"{ak_text}", inline=False)
 			ak_chars_embed.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp}")
-			await message.channel.send(embed=ak_chars_embed)
+			try:
+				await message.channel.send(embed=ak_chars_embed)
+			except Exception as e:
+				await message.channel.send(f"Exception caught in embed\n```{e}```")
 			
 			#await message.channel.send(file=discord.File(r'/home/ubuntu/Documents/souperbeautiful/ak.txt'))
 			#await message.channel.send("Upload complete! Click Expand to see more. Mobile version below.")
