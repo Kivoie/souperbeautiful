@@ -45,9 +45,9 @@ async def schedule_ak_chars():
 				await channel.send("> Fetching data...")
 
 				ak_text = str(ak_operators_new.get_data())		# Fetches, scrapes, and parses the data from an online blog
-				ak_chars_embed_auto = discord.Embed(title="Upcoming Arknights Banners", description="Every Monday at 10:00 EST!", color=0xffd34f)
+				ak_chars_embed_auto = discord.Embed(title="Upcoming Arknights Banners", description=f"Every Monday at 10:00 EST!\n{ak_text}", color=0xffd34f)
 				ak_chars_embed_auto.set_thumbnail(url="https://i.imgur.com/ypKd7gp.png")
-				ak_chars_embed_auto.add_field(name="", value=f"{ak_text}", inline=False)
+				#ak_chars_embed_auto.add_field(name="", value=f"{ak_text}", inline=False)
 				timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
 				ak_chars_embed_auto.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp}")
 
