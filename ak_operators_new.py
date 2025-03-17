@@ -28,7 +28,9 @@ def get_data():
     release_date_cn = []
     combined_array = []
     
-    table = soup.find("table", {"class":"mrfz-wtable"})		#find the "table" tag with the class 'mrfz-wtable'
+    #table = soup.find("table", {"class":"mrfz-wtable"})		#find the "table" tag with the class 'mrfz-wtable'
+
+    table = soup.find("div", {"class":"mw-content-ltr"})
 
     for row in table.findAll('tr'):                         #search through each row in the table
         div_banner = row.find('div', {"class":"banner"})    #find the banner names
