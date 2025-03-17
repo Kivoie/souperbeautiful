@@ -49,7 +49,7 @@ async def schedule_ak_chars():
 				ak_chars_embed_auto.set_thumbnail(url="https://i.imgur.com/ypKd7gp.png")
 				#ak_chars_embed_auto.add_field(name="", value=f"{ak_text}", inline=False)
 				timestamp = str(datetime.now().strftime("%m-%d-%Y %H:%M:%S"))
-				ak_chars_embed_auto.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp}")
+				ak_chars_embed_auto.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp} EST")
 
 				await channel.send(embed=ak_chars_embed_auto)
 				
@@ -218,7 +218,7 @@ async def on_message(message):
 			ak_chars_embed = discord.Embed(title="Upcoming Arknights Banners", description=f"{ak_text}", color=0xffd34f)
 			ak_chars_embed.set_thumbnail(url="https://i.imgur.com/ypKd7gp.png")
 			#ak_chars_embed.add_field(name="", value=f"{ak_text}", inline=False)
-			ak_chars_embed.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp}")
+			ak_chars_embed.set_footer(text=f"Danny's ak_operators script, retrieved {timestamp} EST")
 			try:
 				await message.channel.send(embed=ak_chars_embed)
 			except Exception as e:
